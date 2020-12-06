@@ -1,0 +1,62 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: golang-test-pipeline
+spec:
+  workspaces:
+    - name: shared-workspace
+  tasks:
+    - name: fetch-repository
+      taskRef:
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      params:
+        - name: url
+          value: https://github.com/hb-chen/stack-rpc-plugins
+        - name: subdirectory
+          value: ""
+        - name: deleteExisting
+          value: "true"
+    - name: run-test
+      taskRef:
+        name: golang-test
+      runAfter:
+        - fetch-repository
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+          subPath: service/gateway
+      params:
+        - name: package
+          value: github.com/hb-chen/stack-rpc-plugins
+    - name: run-build
+      taskRef:
+        name: golang-build
+      runAfter:
+        - run-test
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+          subPath: service/gateway
+      params:
+        - name: package
+          value: github.com/github.com/hb-chen/stack-rpc-plugins
+        - name: flags
+          value: -v -o $(workspaces.source.path)/bin/gateway
+    - name: docker-build
+      taskRef:
+        name: docker-build
+      runAfter:
+        - run-build
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+          subPath: service/gateway
+      params:
+        - name: image
+          value: registry.cn-hangzhou.aliyuncs.com/hb-chen/stack-rpc-gateway
+        - name: insecure_registry
+          value: registry.cn-hangzhou.aliyuncs.com

@@ -1,1 +1,1 @@
-# tekton-practice
+# Tekton Practice
