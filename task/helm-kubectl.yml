@@ -1,1 +1,38 @@
-# TODO
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: helm-kubectl-deploy
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/tags: helm, kubectl
+    tekton.dev/displayName: helm-kubectl-deploy
+spec:
+  description: >-
+    Use kubectl and helm deploy application
+  params:
+    - name: image
+      default: dtzar/helm-kubectl:3.1.1
+      description: kubectl and helm image
+    - name: env_secret
+      description: kubernetes cluster config env secret, include $SERVER $CERTIFICATE_AUTHORITY_DATA and $USER_TOKEN
+    - name: commands
+      default: kubectl version
+  workspaces:
+    - name: source
+  results:
+  steps:
+    - name: helm-kubectl-deploy
+      image: $(params.image)
+      envFrom:
+        - secretRef:
+            name: $(params.env_secret)
+      workingDir: $(workspaces.source.path)
+      script: |
+        kubectl config set-cluster k8s --server="$SERVER"
+        kubectl config set clusters.k8s.certificate-authority-data "$CERTIFICATE_AUTHORITY_DATA"
+        kubectl config set-credentials k8s-admin --token="$USER_TOKEN"
+        kubectl config set-context default --cluster=k8s --user=k8s-admin
+        kubectl config use-context default
+        $(params.commands[*])
