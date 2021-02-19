@@ -1,0 +1,14 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: grpc-gateway-pipeline-run
+  #generateName: grpc-gateway-pipeline-run-
+spec:
+  serviceAccountName: build-bot
+  pipelineRef:
+    name: grpc-gateway-pipeline
+  workspaces:
+    - name: shared-workspace
+      persistentvolumeclaim:
+        claimName: golang-source-pvc

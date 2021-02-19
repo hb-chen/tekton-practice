@@ -1,0 +1,93 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: grpc-gateway-pipeline
+spec:
+  workspaces:
+    - name: shared-workspace
+  tasks:
+    - name: fetch-repository
+      taskRef:
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      params:
+        - name: url
+          value: https://github.com/hb-chen/gateway
+        - name: subdirectory
+          value: ""
+        - name: deleteExisting
+          value: "true"
+    - name: run-test
+      taskRef:
+        name: golang-test
+      runAfter:
+        - fetch-repository
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      params:
+        - name: package
+          value: github.com/hb-chen/gateway
+        - name: version
+          value: 1.14.15
+    - name: run-build
+      taskRef:
+        name: golang-build
+      runAfter:
+        - run-test
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      params:
+        - name: package
+          value: github.com/github.com/hb-chen/gateway
+        - name: version
+          value: 1.14.15
+        - name: flags
+          value: -v -o $(workspaces.source.path)/bin/gateway
+#    - name: docker-build
+#      taskRef:
+#        name: docker-build
+#      runAfter:
+#        - run-build
+#      workspaces:
+#        - name: source
+#          workspace: shared-workspace
+#      params:
+#        - name: image
+#          value: registry.cn-hangzhou.aliyuncs.com/hb-chen/grpc-gateway
+#        - name: insecure_registry
+#          value: registry.cn-hangzhou.aliyuncs.com
+    - name: docker-build
+      taskRef:
+        name: kaniko
+      runAfter:
+        - run-build
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      params:
+        - name: IMAGE
+          value: registry.cn-hangzhou.aliyuncs.com/hb-chen/grpc-gateway:latest
+        - name: EXTRA_ARGS
+          value: "--skip-tls-verify"
+        - name: insecure_registry
+          value: registry.cn-hangzhou.aliyuncs.com
+    - name: helm-kubectl-deploy
+      taskRef:
+        name: helm-kubectl-deploy
+      runAfter:
+        - docker-build
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      params:
+        - name: env_secret
+          value: k8s-cluster-config
+        - name: image_digest
+          value: $(tasks.docker-build.results.IMAGE-DIGEST)
+        - name: commands
+          value: helm upgrade --install grpc-gateway ./helm --namespace grpc-gateway --no-hooks --set image.repository=registry.cn-hangzhou.aliyuncs.com/hb-chen/grpc-gateway --set image.tag=latest --set image.digest=@$(tasks.docker-build.results.IMAGE-DIGEST)
