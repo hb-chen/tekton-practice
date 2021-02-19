@@ -31,6 +31,9 @@ spec:
     - name: GOARCH
       description: "running program's architecture target"
       default: amd64
+    - name: CGO_ENABLED
+      description: "value of cgo enabled"
+      default: "0"
     - name: GO111MODULE
       description: "value of module support"
       default: auto
@@ -47,12 +50,15 @@ spec:
         mkdir -p $SRC_PATH
         cp -R "$(workspaces.source.path)"/* $SRC_PATH
         cd $SRC_PATH
+        go env
         go build $(params.flags) $(params.packages)
       env:
         - name: GOOS
           value: "$(params.GOOS)"
         - name: GOARCH
           value: "$(params.GOARCH)"
+        - name: CGO_ENABLED
+          value: "$(params.CGO_ENABLED)"
         - name: GO111MODULE
           value: "$(params.GO111MODULE)"
         - name: GOPROXY
