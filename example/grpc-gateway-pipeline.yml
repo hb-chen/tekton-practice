@@ -6,6 +6,10 @@ metadata:
 spec:
   workspaces:
     - name: shared-workspace
+  params:
+    - name: url
+    - name: revision
+      default: master
   tasks:
     - name: fetch-repository
       taskRef:
@@ -15,7 +19,9 @@ spec:
           workspace: shared-workspace
       params:
         - name: url
-          value: https://github.com/hb-chen/gateway
+          value: $(params.url)
+        - name: revision
+          value: $(params.revision)
         - name: subdirectory
           value: ""
         - name: deleteExisting

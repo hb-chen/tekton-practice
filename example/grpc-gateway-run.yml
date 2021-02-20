@@ -8,6 +8,11 @@ spec:
   serviceAccountName: build-bot
   pipelineRef:
     name: grpc-gateway-pipeline
+  params:
+      - name: url
+        value: https://github.com/hb-chen/gateway
+        - name: revision
+          value: master
   workspaces:
     - name: shared-workspace
       persistentvolumeclaim:
