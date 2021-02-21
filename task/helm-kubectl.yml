@@ -35,3 +35,4 @@ spec:
         kubectl config set-context default --cluster=k8s --user=k8s-admin
         kubectl config use-context default
         $(params.commands)
+\
