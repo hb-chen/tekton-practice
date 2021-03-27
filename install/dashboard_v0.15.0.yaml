@@ -231,24 +231,6 @@ rules:
       - list
       - watch
   - apiGroups:
-      - ""
-    resources:
-      - serviceaccounts
-    verbs:
-      - update
-      - patch
-  - apiGroups:
-      - ""
-    resources:
-      - secrets
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - delete
-  - apiGroups:
       - tekton.dev
     resources:
       - tasks
@@ -323,9 +305,9 @@ metadata:
     app.kubernetes.io/instance: default
     app.kubernetes.io/name: dashboard
     app.kubernetes.io/part-of: tekton-dashboard
-    app.kubernetes.io/version: v0.13.0
-    dashboard.tekton.dev/release: v0.13.0
-    version: v0.13.0
+    app.kubernetes.io/version: v0.15.0
+    dashboard.tekton.dev/release: v0.15.0
+    version: v0.15.0
   name: tekton-dashboard
   namespace: tekton-pipelines
 spec:
@@ -349,9 +331,9 @@ metadata:
     app.kubernetes.io/instance: default
     app.kubernetes.io/name: dashboard
     app.kubernetes.io/part-of: tekton-dashboard
-    app.kubernetes.io/version: v0.13.0
-    dashboard.tekton.dev/release: v0.13.0
-    version: v0.13.0
+    app.kubernetes.io/version: v0.15.0
+    dashboard.tekton.dev/release: v0.15.0
+    version: v0.15.0
   name: tekton-dashboard
   namespace: tekton-pipelines
 spec:
@@ -370,7 +352,7 @@ spec:
         app.kubernetes.io/instance: default
         app.kubernetes.io/name: dashboard
         app.kubernetes.io/part-of: tekton-dashboard
-        app.kubernetes.io/version: v0.13.0
+        app.kubernetes.io/version: v0.15.0
       name: tekton-dashboard
     spec:
       containers:
@@ -380,7 +362,6 @@ spec:
             - --pipelines-namespace=tekton-pipelines
             - --triggers-namespace=tekton-pipelines
             - --read-only=false
-            - --csrf-secure-cookie=false
             - --log-level=info
             - --log-format=json
             - --namespace=
@@ -392,7 +373,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-          image: registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-dashboard@sha256:4f2200964b4e2bb3e6b7366e63362c0637c4040438315ba2cd6e0b37185ccc0e
+          image: registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-dashboard:v0.15.0@sha256:cfbbbe12c7be5f8a541be90059bb35b240f1968b066da610fc5710add6372d0f
           livenessProbe:
             httpGet:
               path: /health

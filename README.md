@@ -2,19 +2,21 @@
 
 ## Install
 
-```shell script
-kubectl apply -f install
+```shell
+kubectl apply -f install/pipeline_v0.20.0.yaml
+kubectl apply -f install/trigger_v0.10.2.yaml
+kubectl apply -f install/dashboard_v0.15.0.yaml
 ```
 
 ## Task
 
-```shell script
+```shell
 kubectl apply -f task
 ```
 
 ## Config
 
-```shell script
+```shell
 kubectl apply -f config
 ```
 
@@ -30,18 +32,18 @@ kubectl apply -f config
 
 ### Pipeline
 
-```shell script
+```shell
 kubectl apply -f example/grpc-gateway-pipeline.yml
 ```
 
 ### 手动运行
 
-```shell script
+```shell
 kubectl apply -f example/grpc-gateway-run.yml
 ```
 
 ### GitHub Trigger
 
-```
+```shell
 kubectl apply -f example/grpc-gateway-trigger.yml
 ```
