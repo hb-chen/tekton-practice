@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: grpc-gateway-pipeline
+  name: gmqtt-pipeline
 spec:
   workspaces:
     - name: shared-workspace
@@ -23,12 +23,25 @@ spec:
         - name: revision
           value: $(params.revision)
         - name: subdirectory
-          value: "grpc-gateway"
+          value: "gmqtt"
         - name: deleteExisting
           value: "true"
-    - name: run-test
+#    - name: run-test
+#      taskRef:
+#        name: golang-test
+#      runAfter:
+#        - fetch-repository
+#      workspaces:
+#        - name: source
+#          workspace: shared-workspace
+#      params:
+#        - name: package
+#          value: github.com/hb-chen/gmqtt
+#        - name: version
+#          value: 1.14.15
+    - name: run-build
       taskRef:
-        name: golang-test
+        name: golang-build
       runAfter:
         - fetch-repository
       workspaces:
@@ -36,24 +49,13 @@ spec:
           workspace: shared-workspace
       params:
         - name: package
-          value: github.com/hb-chen/gateway
-        - name: version
-          value: 1.14.15
-    - name: run-build
-      taskRef:
-        name: golang-build
-      runAfter:
-        - run-test
-      workspaces:
-        - name: source
-          workspace: shared-workspace
-      params:
-        - name: package
-          value: github.com/hb-chen/gateway
+          value: github.com/hb-chen/gmqtt
+        - name: packages
+          value: ./gateway/cmd/...
         - name: version
           value: 1.14.15
         - name: flags
-          value: -v -o $(workspaces.source.path)/bin/gateway
+          value: -v -o $(workspaces.source.path)/gateway/bin/gateway
 #    - name: docker-build
 #      taskRef:
 #        name: docker-build
@@ -64,7 +66,7 @@ spec:
 #          workspace: shared-workspace
 #      params:
 #        - name: image
-#          value: registry.cn-hangzhou.aliyuncs.com/hb-chen/grpc-gateway
+#          value: registry.cn-hangzhou.aliyuncs.com/hb-chen/gmqtt-gateway
 #        - name: insecure_registry
 #          value: registry.cn-hangzhou.aliyuncs.com
     - name: docker-build
@@ -77,7 +79,11 @@ spec:
           workspace: shared-workspace
       params:
         - name: IMAGE
-          value: registry.cn-hangzhou.aliyuncs.com/hb-chen/grpc-gateway:latest
+          value: registry.cn-hangzhou.aliyuncs.com/hb-chen/gmqtt-gateway:latest
+        - name: DOCKERFILE
+          value: ./gateway/Dockerfile
+        - name: CONTEXT
+          value: ./gateway/
         - name: EXTRA_ARGS
           value: "--skip-tls-verify"
         - name: insecure_registry
@@ -96,4 +102,4 @@ spec:
         - name: image_digest
           value: $(tasks.docker-build.results.IMAGE-DIGEST)
         - name: commands
-          value: helm upgrade --install grpc-gateway ./helm --namespace grpc-gateway --no-hooks --set image.repository=registry.cn-hangzhou.aliyuncs.com/hb-chen/grpc-gateway --set image.tag=latest --set image.digest=@$(tasks.docker-build.results.IMAGE-DIGEST)
+          value: helm upgrade --install gmqtt ./helm --namespace gmqtt --no-hooks --set image.repository=registry.cn-hangzhou.aliyuncs.com/hb-chen/gmqtt-gateway --set image.tag=latest --set image.digest=@$(tasks.docker-build.results.IMAGE-DIGEST)

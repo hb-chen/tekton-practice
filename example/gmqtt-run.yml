@@ -2,15 +2,15 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: grpc-gateway-pipeline-run
-  #generateName: grpc-gateway-pipeline-run-
+  name: gmqtt-pipeline-run
+  #generateName: gmqtt-pipeline-run-
 spec:
   serviceAccountName: build-bot
   pipelineRef:
-    name: grpc-gateway-pipeline
+    name: gmqtt-pipeline
   params:
     - name: url
-      value: https://github.com/hb-chen/gateway
+      value: https://github.com/hb-chen/gmqtt
     - name: revision
       value: master
   workspaces:
