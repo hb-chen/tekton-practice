@@ -19,6 +19,10 @@ spec:
     - name: packages
       description: "packages to test (default: ./...)"
       default: "./..."
+    - name: subdirectory
+      description: subdirectory inside the "source"
+      type: string
+      default: ""
     - name: version
       description: golang version to use for tests
       default: "latest"
@@ -45,7 +49,7 @@ spec:
       script: |
         SRC_PATH="$GOPATH/src/$(params.package)"
         mkdir -p $SRC_PATH
-        cp -R "$(workspaces.source.path)"/* $SRC_PATH
+        cp -R "$(workspaces.source.path)"/$(params.subdirectory)/* $SRC_PATH
         cd $SRC_PATH
         go test $(params.flags) $(params.packages)
       env:

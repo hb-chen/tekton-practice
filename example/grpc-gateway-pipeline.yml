@@ -37,6 +37,8 @@ spec:
       params:
         - name: package
           value: github.com/hb-chen/gateway
+        - name: subdirectory
+          value: "gateway"
         - name: version
           value: 1.14.15
     - name: run-build
@@ -50,6 +52,8 @@ spec:
       params:
         - name: package
           value: github.com/hb-chen/gateway
+        - name: subdirectory
+          value: "gateway"
         - name: version
           value: 1.14.15
         - name: flags

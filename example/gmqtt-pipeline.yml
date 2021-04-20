@@ -37,6 +37,8 @@ spec:
 #      params:
 #        - name: package
 #          value: github.com/hb-chen/gmqtt
+#        - name: subdirectory
+#          value: "gmqtt"
 #        - name: version
 #          value: 1.14.15
     - name: run-build
@@ -51,11 +53,13 @@ spec:
         - name: package
           value: github.com/hb-chen/gmqtt
         - name: packages
-          value: ./gateway/cmd/...
+          value: "./gateway/cmd/main.go"
+        - name: subdirectory
+          value: "gmqtt"
         - name: version
           value: 1.14.15
         - name: flags
-          value: -v -o $(workspaces.source.path)/gateway/bin/gateway
+          value: -v -o $(workspaces.source.path)/gmqtt/gateway/bin/gateway
 #    - name: docker-build
 #      taskRef:
 #        name: docker-build
@@ -81,9 +85,9 @@ spec:
         - name: IMAGE
           value: registry.cn-hangzhou.aliyuncs.com/hb-chen/gmqtt-gateway:latest
         - name: DOCKERFILE
-          value: ./gateway/Dockerfile
+          value: ./gmqtt/gateway/Dockerfile
         - name: CONTEXT
-          value: ./gateway/
+          value: ./gmqtt/gateway/
         - name: EXTRA_ARGS
           value: "--skip-tls-verify"
         - name: insecure_registry
@@ -102,4 +106,4 @@ spec:
         - name: image_digest
           value: $(tasks.docker-build.results.IMAGE-DIGEST)
         - name: commands
-          value: helm upgrade --install gmqtt ./helm --namespace gmqtt --no-hooks --set image.repository=registry.cn-hangzhou.aliyuncs.com/hb-chen/gmqtt-gateway --set image.tag=latest --set image.digest=@$(tasks.docker-build.results.IMAGE-DIGEST)
+          value: helm upgrade --install gmqtt ./gmqtt/helm --namespace gmqtt --no-hooks --set image.repository=registry.cn-hangzhou.aliyuncs.com/hb-chen/gmqtt-gateway --set image.tag=latest --set image.digest=@$(tasks.docker-build.results.IMAGE-DIGEST)
