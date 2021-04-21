@@ -23,7 +23,7 @@ spec:
         - name: revision
           value: $(params.revision)
         - name: subdirectory
-          value: "grpc-gateway"
+          value: "gateway"
         - name: deleteExisting
           value: "true"
     - name: run-test
@@ -57,7 +57,7 @@ spec:
         - name: version
           value: 1.14.15
         - name: flags
-          value: -v -o $(workspaces.source.path)/bin/gateway
+          value: -v -o $(workspaces.source.path)/gateway/bin/gateway
 #    - name: docker-build
 #      taskRef:
 #        name: docker-build
@@ -82,6 +82,10 @@ spec:
       params:
         - name: IMAGE
           value: registry.cn-hangzhou.aliyuncs.com/hb-chen/grpc-gateway:latest
+        - name: DOCKERFILE
+          value: ./gateway/Dockerfile
+        - name: CONTEXT
+          value: ./gateway/
         - name: EXTRA_ARGS
           value: "--skip-tls-verify"
         - name: insecure_registry
@@ -100,4 +104,4 @@ spec:
         #- name: image_digest
         #  value: $(tasks.docker-build.results.IMAGE-DIGEST)
         - name: commands
-          value: helm upgrade --install grpc-gateway ./helm --namespace grpc-gateway --no-hooks --set image.repository=registry.cn-hangzhou.aliyuncs.com/hb-chen/grpc-gateway --set image.tag=latest --set image.digest=@$(tasks.docker-build.results.IMAGE-DIGEST)
+          value: helm upgrade --install grpc-gateway ./gateway/helm --namespace grpc-gateway --no-hooks --set image.repository=registry.cn-hangzhou.aliyuncs.com/hb-chen/grpc-gateway --set image.tag=latest --set image.digest=@$(tasks.docker-build.results.IMAGE-DIGEST)
