@@ -30,20 +30,24 @@ kubectl apply -f config
     - 没有使用 `docker-build`，用 Kaniko 方便取到 Digest 
 - Helm & Kubectl
 
+`example` 提供了两个项目的示例，在 trigger 中通过`repository.full_name`进行过滤触发不同的 Pipeline，实际应用可以通过 `cel` 条件触发更多 Pipeline，如`PR`、`TAG`、`RELEASE`等 
+
 ### Pipeline
 
 ```shell
 kubectl apply -f example/grpc-gateway-pipeline.yml
+kubectl apply -f example/gmqtt-pipeline.yml
 ```
 
 ### 手动运行
 
 ```shell
 kubectl apply -f example/grpc-gateway-run.yml
+kubectl apply -f example/gmqtt-run.yml
 ```
 
 ### GitHub Trigger
 
 ```shell
-kubectl apply -f example/grpc-gateway-trigger.yml
+kubectl apply -f example/trigger.yml
 ```
