@@ -55,7 +55,7 @@ spec:
         - name: subdirectory
           value: "gateway"
         - name: version
-          value: 1.14.15
+          value: 1.15.11
         - name: flags
           value: -v -o $(workspaces.source.path)/gateway/bin/gateway
 #    - name: docker-build

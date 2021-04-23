@@ -44,6 +44,9 @@ spec:
     - name: GOPROXY
       description: "go proxy"
       default: "https://mirrors.aliyun.com/goproxy/,direct"
+    - name: GOMODCACHE
+      description: "go mod cache sub directory, base on source path"
+      default: "pkg/mod"
   workspaces:
     - name: source
   steps:
@@ -67,3 +70,5 @@ spec:
           value: "$(params.GO111MODULE)"
         - name: GOPROXY
           value: "$(params.GOPROXY)"
+        - name: GOMODCACHE
+          value: "$(workspaces.source.path)/$(params.GOMODCACHE)"
