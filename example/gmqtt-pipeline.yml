@@ -101,9 +101,6 @@ spec:
         - name: source
           workspace: shared-workspace
       params:
-        - name: env_secret
-          value: k8s-cluster-config
-        #- name: image_digest
-        #  value: $(tasks.docker-build.results.IMAGE-DIGEST)
         - name: commands
-          value: helm upgrade --install gmqtt ./gmqtt/cicd/helm --namespace gmqtt --no-hooks --set image.repository=registry.cn-hangzhou.aliyuncs.com/hb-chen/gmqtt-gateway --set image.tag=latest --set image.digest=@$(tasks.docker-build.results.IMAGE-DIGEST)
+          value: kubectl version && helm upgrade --install gmqtt ./gmqtt/cicd/helm --namespace gmqtt --no-hooks --set image.repository=registry.cn-hangzhou.aliyuncs.com/hb-chen/gmqtt-gateway --set image.tag=latest --set image.digest=@$(tasks.docker-build.results.IMAGE-DIGEST)
+
