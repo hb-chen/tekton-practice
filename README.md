@@ -3,9 +3,10 @@
 ## Install
 
 ```shell
-kubectl apply -f install/pipeline_v0.20.0.yaml
-kubectl apply -f install/trigger_v0.10.2.yaml
-kubectl apply -f install/dashboard_v0.15.0.yaml
+kubectl apply -f install/pipeline_v0.26.0.yaml
+kubectl apply -f install/dashboard_v0.18.1.yaml
+kubectl apply -f install/trigger_v0.15.0.yaml
+kubectl apply -f install/interceptor_v0.15.0.yaml
 ```
 
 ## Task
