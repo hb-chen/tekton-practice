@@ -12,13 +12,31 @@ kubectl apply -f install/interceptor_v0.15.0.yaml
 ## Task
 
 ```shell
-kubectl apply -f task
+kubectl apply -n tekton-pipelines -f task
 ```
 
 ## Config
 
-```shell
-kubectl apply -f config
+```shell script
+kubectl apply -n tekton-pipelines -f config
+```
+
+[Pull an Image from a Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private
+-registry)
+
+> 注意如果 `config.json` 中没有 `auth`，删掉 `credsStore`，重新 `docker login`  
+
+```shell script
+kubectl create secret generic dockerconfig \
+  -n tekton-pipelines \
+  --from-file=config.json=$HOME/.docker/config.json \
+  --type=kubernetes.io/dockerconfig
+```
+
+```shell script
+kubectl create secret generic k8s-kubeconfig \
+  -n tekton-pipelines \
+  --from-file=$HOME/.kube/config
 ```
 
 ## Golang 示例
@@ -36,19 +54,19 @@ kubectl apply -f config
 ### Pipeline
 
 ```shell
-kubectl apply -f example/grpc-gateway-pipeline.yml
-kubectl apply -f example/gmqtt-pipeline.yml
+kubectl apply -n tekton-pipelines -f example/grpc-gateway-pipeline.yml
+kubectl apply -n tekton-pipelines -f example/gmqtt-pipeline.yml
 ```
 
 ### 手动运行
 
 ```shell
-kubectl apply -f example/grpc-gateway-run.yml
-kubectl apply -f example/gmqtt-run.yml
+kubectl apply -n tekton-pipelines -f example/grpc-gateway-run.yml
+kubectl apply -n tekton-pipelines -f example/gmqtt-run.yml
 ```
 
 ### GitHub Trigger
 
 ```shell
-kubectl apply -f example/trigger.yml
+kubectl apply -n tekton-pipelines -f example/trigger.yml
 ```
