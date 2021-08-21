@@ -1,13 +1,14 @@
-# fork from tektoncd/kaniko, add insecure_registry
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: kaniko
   labels:
-    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/version: "0.4"
   annotations:
-    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/pipelines.minVersion: "0.17.0"
+    tekton.dev/categories: Image Build
     tekton.dev/tags: image-build
+    tekton.dev/displayName: "Build and upload container image using Kaniko"
 spec:
   description: >-
     This Task builds source into a container image using Google's kaniko tool.
@@ -27,36 +28,31 @@ spec:
       description: The build context used by Kaniko.
       default: ./
     - name: EXTRA_ARGS
-      default: ""
+      type: array
+      default: []
     - name: BUILDER_IMAGE
       description: The image on which builds will run
-      default: registry.cn-hangzhou.aliyuncs.com/hb-chen/kaniko-executor@sha256:e36c9fa99279217c4bb8ee172819b441c3ca8ef946dc0e28b21721eefb2ba70a
-    - name: insecure_registry
-      description: Allows the user to push to an insecure registry that has been specified
-      default: ""
+      default: registry.cn-hangzhou.aliyuncs.com/hb-chen/kaniko-executor:v1.5.1@sha256:c812530c2ea981d3316c7544b180289abfbd9adf1dde6f1345692b8fb0a65cb0
   workspaces:
     - name: source
+      description: Holds the context and docker file
+    - name: dockerconfig
+      description: Includes a docker `config.json`
+      optional: true
+      mountPath: /kaniko/.docker
   results:
     - name: IMAGE-DIGEST
       description: Digest of the image just built.
-
   steps:
     - name: build-and-push
       workingDir: $(workspaces.source.path)
       image: $(params.BUILDER_IMAGE)
-      # specifying DOCKER_CONFIG is required to allow kaniko to detect docker credential
-      # https://github.com/tektoncd/pipeline/pull/706
-      env:
-        - name: DOCKER_CONFIG
-          value: /tekton/home/.docker
-      command:
-        - /kaniko/executor
-        - $(params.EXTRA_ARGS)
+      args:
+        - $(params.EXTRA_ARGS[*])
         - --dockerfile=$(params.DOCKERFILE)
         - --context=$(workspaces.source.path)/$(params.CONTEXT)  # The user does not need to care the workspace and the source.
         - --destination=$(params.IMAGE)
         - --oci-layout-path=$(workspaces.source.path)/$(params.CONTEXT)/image-digest
-      #  - --insecure-registry=$(params.insecure_registry)
       # kaniko assumes it is running as root, which means this example fails on platforms
       # that default to run containers as random uid (like OpenShift). Adding this securityContext
       # makes it explicit that it needs to run as root.

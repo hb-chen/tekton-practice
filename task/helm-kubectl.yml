@@ -28,12 +28,13 @@ spec:
       image: $(params.image)
       workingDir: $(workspaces.source.path)
       script: |
-        pwd
         ls -l
+        kubectl version
+        helm version
         $(params.commands)
       volumeMounts:
         - name: kubeconfig
-          mountPath: "/tekton/home/.kube"
+          mountPath: "/root/.kube"
           readOnly: true
   volumes:
     - name: kubeconfig
