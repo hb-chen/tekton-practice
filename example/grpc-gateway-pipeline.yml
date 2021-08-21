@@ -7,6 +7,7 @@ spec:
   workspaces:
     - name: shared-workspace
     - name: dockerconfig
+    - name: kubeconfig
   params:
     - name: url
     - name: revision
@@ -88,6 +89,8 @@ spec:
       workspaces:
         - name: source
           workspace: shared-workspace
+        - name: kubeconfig
+          workspace: kubeconfig
       params:
         - name: commands
           value: |

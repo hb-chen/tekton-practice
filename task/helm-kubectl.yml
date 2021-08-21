@@ -15,13 +15,14 @@ spec:
     - name: image
       default: dtzar/helm-kubectl:3.4.2
       description: kubectl and helm image
-    - name: kubeconfig
-      default: k8s-kubeconfig
-      description: kubernetes cluster kubeconfig
     - name: commands
       default: kubectl version
   workspaces:
     - name: source
+    - name: kubeconfig
+      description: Includes a `.kube/config`
+      optional: true
+      mountPath: /root/.kube
   results:
   steps:
     - name: helm-kubectl-deploy
@@ -32,11 +33,3 @@ spec:
         kubectl version
         helm version
         $(params.commands)
-      volumeMounts:
-        - name: kubeconfig
-          mountPath: "/root/.kube"
-          readOnly: true
-  volumes:
-    - name: kubeconfig
-      secret:
-        secretName: $(params.kubeconfig)
