@@ -89,6 +89,12 @@ spec:
           - name: shared-workspace
             persistentvolumeclaim:
               claimName: golang-source-pvc
+          - name: dockerconfig
+            secret:
+              secretName: dockerconfig
+          - name: kubeconfig
+            secret:
+              secretName: k8s-kubeconfig
         params:
           - name: url
             value: $(tt.params.gitrepositoryurl)
@@ -119,6 +125,12 @@ spec:
           - name: shared-workspace
             persistentvolumeclaim:
               claimName: golang-source-pvc
+          - name: dockerconfig
+            secret:
+              secretName: dockerconfig
+          - name: kubeconfig
+            secret:
+              secretName: k8s-kubeconfig
         params:
           - name: url
             value: $(tt.params.gitrepositoryurl)
