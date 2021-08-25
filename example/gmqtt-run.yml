@@ -2,8 +2,8 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: gmqtt-pipeline-run
-  #generateName: gmqtt-pipeline-run-
+#  name: gmqtt-pipeline-run
+  generateName: gmqtt-pipeline-run-
 spec:
   serviceAccountName: build-bot
   pipelineRef:
@@ -17,3 +17,9 @@ spec:
     - name: shared-workspace
       persistentvolumeclaim:
         claimName: golang-source-pvc
+    - name: dockerconfig
+      secret:
+        secretName: dockerconfig
+    - name: kubeconfig
+      secret:
+        secretName: k8s-kubeconfig
