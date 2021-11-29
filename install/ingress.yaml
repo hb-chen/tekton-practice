@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tekton-ingress
+  namespace: tekton-pipelines
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: tekton.k8s.hbchen.com
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: tekton-dashboard
+                port:
+                  number: 9097
+    - host: el.tekton.k8s.hbchen.com
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: el-github-listener-interceptor
+                port:
+                  number: 8080
