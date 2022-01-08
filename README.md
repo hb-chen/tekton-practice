@@ -3,11 +3,16 @@
 ## Install
 
 ```shell
-kubectl apply -f install/pipeline_v0.26.0.yaml
-kubectl apply -f install/dashboard_v0.18.1.yaml
-kubectl apply -f install/trigger_v0.15.0.yaml
-kubectl apply -f install/interceptor_v0.15.0.yaml
+kubectl apply -f install/pipeline_v0.31.0.yaml
+kubectl apply -f install/dashboard_v0.23.0.yaml
+kubectl apply -f install/trigger_v0.18.0.yaml
+kubectl apply -f install/interceptor_v0.18.0.yaml
 ```
+
+| Date       | Pipelie   | Dashboard | Trigger   | Interceptor |
+| ---------- | --------- | --------- | --------- | ----------- |
+| 2022-01-08 | `v0.31.0` | `v0.23.0` | `v0.18.0` | `v0.18.0`   |
+| 2021-08-23 | `v0.26.0` | `v0.18.1` | `v0.15.0` | `v0.15.0`   |
 
 ## Task
 
@@ -21,8 +26,7 @@ kubectl apply -n tekton-pipelines -f task
 kubectl apply -n tekton-pipelines -f config
 ```
 
-[Pull an Image from a Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private
--registry)
+[Pull an Image from a Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry)
 
 > 注意如果 `config.json` 中没有 `auth`，删掉 `credsStore`，重新 `docker login`  
 
