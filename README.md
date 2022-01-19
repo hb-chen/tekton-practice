@@ -65,8 +65,8 @@ kubectl apply -n tekton-pipelines -f example/gmqtt-pipeline.yml
 ### 手动运行
 
 ```shell
-kubectl apply -n tekton-pipelines -f example/grpc-gateway-run.yml
-kubectl apply -n tekton-pipelines -f example/gmqtt-run.yml
+kubectl create -n tekton-pipelines -f example/grpc-gateway-run.yml
+kubectl create -n tekton-pipelines -f example/gmqtt-run.yml
 ```
 
 ### GitHub Trigger

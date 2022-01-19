@@ -41,6 +41,20 @@ spec:
         - ref: pipeline-binding
       template:
         ref: gmqtt-pipeline-template
+    - name: github-micro-starter-listener
+      interceptors:
+        - github:
+            secretRef:
+              secretName: github-secret
+              secretKey: secretToken
+            eventTypes:
+        # CEL 过滤或扩展 Event
+        - cel:
+            filter: "body.repository.full_name in ['hb-chen/micro-starter']"
+      bindings:
+        - ref: pipeline-binding
+      template:
+        ref: micro-starter-pipeline-template
   resources:
     kubernetesResource:
       spec:
