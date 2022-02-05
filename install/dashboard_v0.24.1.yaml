@@ -276,7 +276,7 @@ subjects:
 ---
 apiVersion: v1
 data:
-  version: v0.23.0
+  version: v0.24.1
 kind: ConfigMap
 metadata:
   labels:
@@ -294,9 +294,9 @@ metadata:
     app.kubernetes.io/instance: default
     app.kubernetes.io/name: dashboard
     app.kubernetes.io/part-of: tekton-dashboard
-    app.kubernetes.io/version: v0.23.0
-    dashboard.tekton.dev/release: v0.23.0
-    version: v0.23.0
+    app.kubernetes.io/version: v0.24.1
+    dashboard.tekton.dev/release: v0.24.1
+    version: v0.24.1
   name: tekton-dashboard
   namespace: tekton-pipelines
 spec:
@@ -320,9 +320,9 @@ metadata:
     app.kubernetes.io/instance: default
     app.kubernetes.io/name: dashboard
     app.kubernetes.io/part-of: tekton-dashboard
-    app.kubernetes.io/version: v0.23.0
-    dashboard.tekton.dev/release: v0.23.0
-    version: v0.23.0
+    app.kubernetes.io/version: v0.24.1
+    dashboard.tekton.dev/release: v0.24.1
+    version: v0.24.1
   name: tekton-dashboard
   namespace: tekton-pipelines
 spec:
@@ -341,7 +341,7 @@ spec:
         app.kubernetes.io/instance: default
         app.kubernetes.io/name: dashboard
         app.kubernetes.io/part-of: tekton-dashboard
-        app.kubernetes.io/version: v0.23.0
+        app.kubernetes.io/version: v0.24.1
       name: tekton-dashboard
     spec:
       containers:
@@ -361,7 +361,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-          image: registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-dashboard:v0.23.0@sha256:570437bdd2a1a23a308b3fdc01f0e90f40e6498f069bf3b561494aa29067b4e4
+          image: registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-dashboard:v0.24.1@sha256:fa67aff30f468305b004a3e87814822ecee4eb5dcff61724eb5b6b053399a683
           livenessProbe:
             httpGet:
               path: /health
