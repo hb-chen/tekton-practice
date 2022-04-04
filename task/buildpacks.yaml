@@ -1,12 +1,11 @@
-# fork from tektoncd/catalog
-# add docker config workspace
+# fork from tektoncd/catalog/buildpacks/0.4
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: buildpacks
   labels:
-    app.kubernetes.io/version: "0.3"
+    app.kubernetes.io/version: "0.4"
   annotations:
     tekton.dev/categories: Image Build
     tekton.dev/pipelines.minVersion: "0.17.0"
@@ -17,7 +16,6 @@ spec:
   description: >-
     The Buildpacks task builds source into a container image and pushes it to a registry,
     using Cloud Native Buildpacks.
-
   workspaces:
     - name: source
       description: Directory where application source is located.
@@ -25,9 +23,11 @@ spec:
       description: Directory where cache is stored (when no cache image is provided).
       optional: true
     - name: dockerconfig
-      description: Includes a docker `config.json`
+      description: >-
+        An optional workspace that allows providing a .docker/config.json file
+        for Buildpacks lifecycle binary to access the container registry.
+        The file should be placed at the root of the Workspace with name config.json.
       optional: true
-      mountPath: /root/.docker
 
   params:
     - name: APP_IMAGE
@@ -81,21 +81,17 @@ spec:
       script: |
         #!/usr/bin/env bash
         set -e
-
-        pwd
-        echo $HOME
-        whoami
-
         if [[ "$(workspaces.cache.bound)" == "true" ]]; then
           echo "> Setting permissions on '$(workspaces.cache.path)'..."
           chown -R "$(params.USER_ID):$(params.GROUP_ID)" "$(workspaces.cache.path)"
         fi
-
         for path in "/tekton/home" "/layers" "$(workspaces.source.path)"; do
           echo "> Setting permissions on '$path'..."
           chown -R "$(params.USER_ID):$(params.GROUP_ID)" "$path"
+          if [[ "$path" == "$(workspaces.source.path)" ]]; then
+              chmod 775 "$(workspaces.source.path)"
+          fi
         done
-
         echo "> Parsing additional configuration..."
         parsing_flag=""
         envs=()
@@ -107,13 +103,10 @@ spec:
                 envs+=("$arg")
             fi
         done
-
         echo "> Processing any environment variables..."
         ENV_DIR="/platform/env"
-
         echo "--> Creating 'env' directory: $ENV_DIR"
         mkdir -p "$ENV_DIR"
-
         for env in "${envs[@]}"; do
             IFS='=' read -r key value string <<< "$env"
             if [[ "$key" != "" && "$value" != "" ]]; then
@@ -122,20 +115,19 @@ spec:
                 echo -n "$value" > "$path"
             fi
         done
-        echo $BP_GO_TARGETS
-
       volumeMounts:
         - name: layers-dir
           mountPath: /layers
         - name: $(params.PLATFORM_DIR)
           mountPath: /platform
-      securityContext:
-        privileged: true
 
     - name: create
       image: $(params.BUILDER_IMAGE)
       imagePullPolicy: Always
       command: ["/cnb/lifecycle/creator"]
+      env:
+        - name: DOCKER_CONFIG
+          value: $(workspaces.dockerconfig.path)
       args:
         - "-app=$(workspaces.source.path)/$(params.SOURCE_SUBPATH)"
         - "-cache-dir=$(workspaces.cache.path)"
@@ -144,7 +136,6 @@ spec:
         - "-gid=$(params.GROUP_ID)"
         - "-layers=/layers"
         - "-platform=/platform"
-        - "-project-metadata=cicd/buildpacks/project.toml"
         - "-report=/layers/report.toml"
         - "-process-type=$(params.PROCESS_TYPE)"
         - "-skip-restore=$(params.SKIP_RESTORE)"
