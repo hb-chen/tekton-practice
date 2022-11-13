@@ -3,14 +3,15 @@
 ## Install
 
 ```shell
-kubectl apply -f install/pipeline_v0.36.0.yaml
-kubectl apply -f install/dashboard_v0.27.0.yaml
-kubectl apply -f install/trigger_v0.20.0.yaml
-kubectl apply -f install/interceptor_v0.20.0.yaml
+kubectl apply -f install/pipeline_v0.41.0.yaml
+kubectl apply -f install/dashboard_v0.30.0.yaml
+kubectl apply -f install/trigger_v0.21.0.yaml
+kubectl apply -f install/interceptor_v0.21.0.yaml
 ```
 
-| Date       | Pipelie   | Dashboard | Trigger   | Interceptor |
+| Date       | Pipeline  | Dashboard | Trigger   | Interceptor |
 |------------|-----------|-----------|-----------|-------------|
+| 2022-11-13 | `v0.41.0` | `v0.30.0` | `v0.21.0` | `v0.21.0`   |
 | 2022-06-18 | `v0.36.0` | `v0.27.0` | `v0.20.0` | `v0.20.0`   |
 | 2022-01-08 | `v0.31.0` | `v0.23.0` | `v0.18.0` | `v0.18.0`   |
 | 2021-08-23 | `v0.26.0` | `v0.18.1` | `v0.15.0` | `v0.15.0`   |
