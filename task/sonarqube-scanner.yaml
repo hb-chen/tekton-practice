@@ -80,6 +80,10 @@ spec:
           value: $(params.SOURCE_TO_SCAN)
         - name: SONAR_ORGANIZATION
           value: $(params.SONAR_ORGANIZATION)
+        - name: SONAR_GITLAB_COMMIT_SHA
+          value: $(params.SONAR_GITLAB_COMMIT_SHA)
+        - name: SONAR_GITLAB_REF_NAME
+          value: $(params.SONAR_GITLAB_REF_NAME)
       script: |
         #!/usr/bin/env bash
 
@@ -174,4 +178,5 @@ spec:
       script: |
         pwd
         ls -l
+        cat sonar-project.properties
         sonar-scanner

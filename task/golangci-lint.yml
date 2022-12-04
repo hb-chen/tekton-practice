@@ -35,6 +35,9 @@ spec:
     - name: GO111MODULE
       description: "value of module support"
       default: auto
+    - name: GOPROXY
+      description: "go proxy"
+      default: "https://mirrors.aliyun.com/goproxy/,direct"
     - name: GOCACHE
       description: "Go caching directory path"
       default: ""
@@ -52,7 +55,7 @@ spec:
       workingDir: $(workspaces.source.path)/$(params.context)
       script: |
         pwd
-        ls
+        ls -l
         mkdir -p ./.golangci-lint
         golangci-lint run $(params.flags)
       env:
@@ -64,6 +67,8 @@ spec:
           value: "$(params.GOARCH)"
         - name: GO111MODULE
           value: "$(params.GO111MODULE)"
+        - name: GOPROXY
+          value: "$(params.GOPROXY)"
         - name: GOCACHE
           value: "$(params.GOCACHE)"
         - name: GOMODCACHE
