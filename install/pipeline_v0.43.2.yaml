@@ -2008,13 +2008,20 @@ spec:
       serviceAccountName: tekton-pipelines-controller
       containers:
         - name: tekton-pipelines-controller
-          image: gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/controller:v0.43.2@sha256:e1a541216f70bfc519739e056111d0f69e7959913e28ccbf98ce9fe2fd0dd406
+          image: registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-controller:v0.43.2@sha256:d3f728909da2053c369565a5949c15bd20c21e7ec2619488831ead442ec61bc5
           args: [
             # These images are built on-demand by `ko resolve` and are replaced
             # by image references by digest.
-            "-kubeconfig-writer-image", "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/kubeconfigwriter:v0.43.2@sha256:449fae542ca42a94171c7e6fe41af4451c62126743f77b47f09bbcecc932145e", "-git-image", "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.43.2@sha256:cd5fb697a91af1883917e5e8ab230566bff60fd1310fb2d0e12badcee7db5db6", "-entrypoint-image", "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.43.2@sha256:50333090b874cdff1706d9f4de9d367270586d91a3204f223ad3c9c8f8b5968b", "-nop-image", "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/nop:v0.43.2@sha256:6c99e85668d5c5d383ee341fb22affb71ea2908f5615a3ec0157980ac1891ef4", "-sidecarlogresults-image", "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/sidecarlogresults:v0.43.2@sha256:8c7e3dbb3cbfa76e9d291d869d50c93b4b9001dab6e3143d5db7b4e297144814", "-imagedigest-exporter-image", "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/imagedigestexporter:v0.43.2@sha256:768185690a3c5b5a79c764fe3d66bac8351136a14dd82d9fd7da019789b4ed95", "-pr-image", "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/pullrequest-init:v0.43.2@sha256:8f5809192c455ea3a657203337e139482b06ffdef1a32d3ad494d6bcdb7c1465", "-workingdirinit-image", "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/workingdirinit:v0.43.2@sha256:707cf41528b19e7b20925fcfe17b1ebf8e61a22fe824df6b79c17b36f81a2d19",
+            "-kubeconfig-writer-image", "registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-kubeconfigwriter:v0.43.2@sha256:113227b772eff1ca18ccf2c9e6b63ff80f2e4dd5010c9219e4e39e6234b41159",
+            "-git-image", "registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-git-init:v0.43.2@sha256:3a0d50531c5890deab827193f67da4427aa3409b4f0a41ffbe762ba652c6c40c",
+            "-entrypoint-image", "registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-entrypoint:v0.43.2@sha256:44a6808004451dfe4b6133b5263d364c27aa4d2682b94cbb83e785589a5c6474",
+            "-nop-image", "registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-nop:v0.43.2@sha256:85379940257bf9527e1b02f7838b4c3e29b64691199ab9b09cfe326000ec257a",
+            "-sidecarlogresults-image", "registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-sidecarlogresults:v0.43.2@sha256:756455e63a72ffd57883f25155a8bf73a4eecd2e4bfab7ad092413cbd3b3a9da",
+            "-imagedigest-exporter-image", "registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-imagedigestexporter:v0.43.2@sha256:e78fdf9bd4216784043137ab4ebf90dc0d59edb175242160c80a48a751b736a2",
+            "-pr-image", "registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-pullrequest-init:v0.43.2@sha256:15a176df3e259c0dbea2b08e362dc0e5b7243376cce8552d11c2aab1e9261a18",
+            "-workingdirinit-image", "registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-workingdirinit:v0.43.2@sha256:ecdb509069063b1f925744f50d3db78bf8ae63036e419ddc32a09d454c204d75",
             # This is gcr.io/google.com/cloudsdktool/cloud-sdk:302.0.0-slim
-            "-gsutil-image", "gcr.io/google.com/cloudsdktool/cloud-sdk@sha256:27b2c22bf259d9bc1a291e99c63791ba0c27a04d2db0a43241ba0f1f20f4067f",
+            "-gsutil-image", "registry.cn-hangzhou.aliyuncs.com/hb-chen/cloudsdktool-cloud-sdk:302.0.0-slim",
             # The shell image must allow root in order to create directories and copy files to PVCs.
             # cgr.dev/chainguard/busybox as of April 14 2022
             # image shall not contains tag, so it will be supported on a runtime like cri-o
@@ -2744,7 +2751,7 @@ spec:
       serviceAccountName: tekton-pipelines-resolvers
       containers:
         - name: controller
-          image: gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/resolvers:v0.43.2@sha256:5ea2565c256a5085ee422d4778166fd1fe0f985ff6e3816542728379433f30db
+          image: registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-resolvers:v0.43.2@sha256:1d78e3f2884acc80990dd91dfd86063209d1a69598013e4a4315708786285e6d
           resources:
             requests:
               cpu: 100m
@@ -2910,7 +2917,7 @@ spec:
         - name: webhook
           # This is the Go import path for the binary that is containerized
           # and substituted here.
-          image: gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/webhook:v0.43.2@sha256:e2bc5e55370049efa5ed3e16868ecec65fb9cdb6df0fd7e08568a8b6f3193186
+          image: registry.cn-hangzhou.aliyuncs.com/hb-chen/tektoncd-webhook:v0.43.2@sha256:c7200f35535f9a75a7cb354cca90c75b3838ec83edc65d8f6cc5cdb880ef7517
           # Resource request required for autoscaler to take any action for a metric
           resources:
             requests:
