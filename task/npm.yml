@@ -1,0 +1,56 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: npm
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.17.0"
+    tekton.dev/categories: Build Tools
+    tekton.dev/tags: build-tool
+    tekton.dev/platforms: "linux/amd64,linux/s390x,linux/ppc64le"
+spec:
+  description: >-
+    This task can be used to run npm goals on a project.
+
+    This task can be used to run npm goals on a project
+    where package.json is present and has some pre-defined
+    npm scripts.
+  workspaces:
+    - name: source
+  params:
+    - name: PATH_CONTEXT
+      type: string
+      default: "."
+      description: The path where package.json of the project is defined.
+    - name: ARGS
+      type: string
+      default: "version"
+      description: The npm goals you want to run.
+    - name: IMAGE
+      type: string
+      default: "docker.io/library/node:16-alpine3.17@sha256:25828d5c4ae9824273db9ca2e923da2d29bbae78f534e979f09eb99a2e812e94"
+      description: The node image you want to use.
+    - name: NPM_CACHE
+      type: string
+      default: ".npm-cache"
+    - name: NPM_REGISTRY
+      type: string
+      default: "https://registry.npmjs.org"
+  steps:
+    - name: npm-run
+      image: $(params.IMAGE)
+      script: |
+        npm version
+        echo @@config@@
+        npm config set registry $(params.NPM_REGISTRY)
+        npm info undercore
+        npm config set cache "$(workspaces.source.path)/$(params.NPM_CACHE)" --global
+        echo @@install@@
+        npm install
+        echo @@run build or other@@
+        npm $(params.ARGS)
+      workingDir: $(workspaces.source.path)/$(params.PATH_CONTEXT)
+      env:
+        - name: CI
+          value: "true"
